@@ -1,13 +1,5 @@
-//
-//  testc.h
-//  myapp
-//
-//  Created by lichao on 2020/1/30.
-//  Copyright © 2020年 lichao. All rights reserved.
-//
-
-#ifndef testc_h
-#define testc_h
+#ifndef test_h
+#define test_h
 
 #include <stdio.h>
 #include "libavutil/avutil.h"
@@ -19,4 +11,4 @@
 void set_status(int status);
 void rec_audio(void);
 
-#endif /* testc_h */
+#endif /* test_h */

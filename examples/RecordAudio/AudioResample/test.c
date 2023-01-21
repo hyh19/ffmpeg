@@ -1,12 +1,4 @@
-//
-//  testc.c
-//  myapp
-//
-//  Created by lichao on 2020/1/30.
-//  Copyright © 2020年 lichao. All rights reserved.
-//
-
-#include "testc.h"
+#include "test.h"
 
 static int rec_status = 0;
 
