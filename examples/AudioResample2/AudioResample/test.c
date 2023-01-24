@@ -119,78 +119,75 @@ static void read_data_and_resample(AVFormatContext *fmt_ctx, SwrContext *swr_ctx
     free_resample_buffer(src_data, dst_data);
 }
 
-AVCodecContext* open_coder(){
-    
-    //打开编码器
-    //avcodec_find_encoder(AV_CODEC_ID_AAC);
+// 打开编码器
+AVCodecContext* open_encoder(){
+    // avcodec_find_encoder(AV_CODEC_ID_AAC);
     AVCodec *codec = avcodec_find_encoder_by_name("libfdk_aac");
     
-    //创建 codec 上下文
     AVCodecContext *codec_ctx = avcodec_alloc_context3(codec);
     
-    codec_ctx->sample_fmt = AV_SAMPLE_FMT_S16;          //输入音频的采样大小
-    codec_ctx->channel_layout = AV_CH_LAYOUT_STEREO;    //输入音频的channel layout
-    codec_ctx->channels = 2;                            //输入音频 channel 个数
-    codec_ctx->sample_rate = 44100;                     //输入音频的采样率
-    codec_ctx->bit_rate = 0; //AAC_LC: 128K, AAC HE: 64K, AAC HE V2: 32K
-    codec_ctx->profile = FF_PROFILE_AAC_HE; //阅读 ffmpeg 代码
+    codec_ctx->sample_fmt = AV_SAMPLE_FMT_S16;          // 输入音频的采样大小
+    codec_ctx->channel_layout = AV_CH_LAYOUT_STEREO;    // 输入音频的声道布局
+    codec_ctx->channels = 2;                            // 输入音频的声道个数
+    codec_ctx->sample_rate = 44100;                     // 输入音频的采样频率
+    codec_ctx->bit_rate = 0;                            // AAC_LC: 128K, AAC HE: 64K, AAC HE V2: 32K
+    codec_ctx->profile = FF_PROFILE_AAC_HE;
     
-    //打开编码器
     if(avcodec_open2(codec_ctx, codec, NULL)<0){
-        //
-        
         return NULL;
     }
     
     return codec_ctx;
 }
 
+// 创建音频帧（缓冲区）
 AVFrame* create_frame(){
     AVFrame *frame = av_frame_alloc();
+    
     if(!frame){
-        
+        // TODO
     }
     
-    frame->nb_samples     = 512;                //单通道一个音频帧的采样数
-    frame->format         = AV_SAMPLE_FMT_S16;  //每个采样的大小
-    frame->channel_layout = AV_CH_LAYOUT_STEREO; //channel layout
-    av_frame_get_buffer(frame, 0); // 512 * 2 * = 2048
+    frame->nb_samples     = 512;                // 采样个数
+    frame->format         = AV_SAMPLE_FMT_S16;  // 采样位深
+    frame->channel_layout = AV_CH_LAYOUT_STEREO; // 声道布局
+    
+    av_frame_get_buffer(frame, 0); // 缓冲区大小 = 512 采样 * 2 字节 * 2 声道 = 2048 字节
     
     if(!frame->buf[0]){
-        
+        // TODO
     }
     
     return frame;
 }
 
+// 编码数据
 void encode(AVCodecContext *ctx,
             AVFrame *frame,
             AVPacket *pkt,
-            FILE *output){
-    
-    int ret = 0;
-    
-    //将数据送编码器
-    ret = avcodec_send_frame(ctx, frame);
-    
-    //如果ret>=0说明数据设置成功
-    while(ret >= 0){
-        //获取编码后的音频数据,如果成功，需要重复获取，直到失败为止
-        ret = avcodec_receive_packet(ctx, pkt);
-        
+            FILE *outfile){
+    int ret;
+    // 发送数据到编码器 https://bit.ly/3XzIV1A
+    if ((ret = avcodec_send_frame(ctx, frame)) == 0) {
+        // 获取编码后的音频数据，如果成功，需要重复获取，直到编码结束或失败为止
+    // https://bit.ly/3DaPcsu
+        while((ret = avcodec_receive_packet(ctx, pkt)) == 0){
+            fwrite(pkt->data, 1, pkt->size, outfile);
+            fflush(outfile);
+        }
         if(ret == AVERROR(EAGAIN) || ret == AVERROR_EOF){
             return;
-        }else if( ret < 0){
-            printf("Error, encoding audio frame\n");
+        } else if( ret < 0){
+            printf("Error, Failed to receive packet!\n");
             exit(-1);
         }
-        
-        //write file
-        fwrite(pkt->data, 1, pkt->size, output);
-        fflush(output);
     }
-    
-    return;
+    if(ret == AVERROR(EAGAIN) || ret == AVERROR_EOF){
+        return;
+    } else if( ret < 0){
+        printf("Error, Failed to send frame!\n");
+        exit(-1);
+    }
 }
 
 static
@@ -208,23 +205,26 @@ void read_data_and_encode(AVFormatContext *fmt_ctx, //
 
     alloc_resample_buffer(&src_data, &src_linesize, &dst_data, &dst_linesize);
 
-    //音频输入数据
+    // 音频输入数据
     AVFrame *frame = create_frame();
-    AVPacket pkt;
-    AVPacket *newpkt = av_packet_alloc(); //分配编码后的数据空间
-    if(!newpkt){
-        //
+    // 采样数据包
+    AVPacket sample_pkt;
+    
+    // 编码数据包
+    AVPacket *encoded_pkt = av_packet_alloc();
+    if(!encoded_pkt){
+        // TODO
     }
 
     // 从输入设备读取数据
-    while (av_read_frame(fmt_ctx, &pkt) == 0 &&
+    while (av_read_frame(fmt_ctx, &sample_pkt) == 0 &&
             rec_status) {
         av_log(NULL, AV_LOG_INFO,
                 "packet size is %d (%p)\n",
-                pkt.size, (void *) pkt.data);
+                sample_pkt.size, (void *) sample_pkt.data);
 
         // 拷贝数据到重采样输入缓冲区
-        memcpy((void *) src_data[0], (void *) pkt.data, pkt.size);
+        memcpy((void *) src_data[0], (void *) sample_pkt.data, sample_pkt.size);
 
         // 开始重采样
         swr_convert(swr_ctx,                 // 重采样上下文
@@ -233,22 +233,22 @@ void read_data_and_encode(AVFormatContext *fmt_ctx, //
                 (const uint8_t **) src_data, // 重采样输入缓冲区
                 512);                        // 输入的单声道采样个数
 
-        //将重采样的数据拷贝到 frame 中
+        // 拷贝重采样后的数据到音频编码帧缓存区
         memcpy((void *)frame->data[0], dst_data[0], dst_linesize);
         
-        //encode
-        encode(c_ctx, frame, newpkt, outfile);
+        // 开始编码
+        encode(c_ctx, frame, encoded_pkt, outfile);
 
-        av_packet_unref(&pkt);
+        av_packet_unref(&sample_pkt);
     }
-    //强制将编码器缓冲区中的音频进行编码输出
-        encode(c_ctx, NULL, newpkt, outfile);
-    
-    //释放 AVFrame 和 AVPacket
-        av_frame_free(&frame);
-        av_packet_free(&newpkt);
+    // 强制将编码器缓冲区中的数据编码输出
+    encode(c_ctx, NULL, encoded_pkt, outfile);
     
     free_resample_buffer(src_data, dst_data);
+    
+    // 释放 AVFrame 和 AVPacket
+    av_frame_free(&frame);
+    av_packet_free(&encoded_pkt);
 }
 
 // 录制音频
@@ -270,7 +270,7 @@ void rec_audio() {
     }
     
     //打开编码器上下文
-    AVCodecContext* c_ctx = open_coder();
+    AVCodecContext* c_ctx = open_encoder();
 
 
     const char *filename = "/Users/hyh/Downloads/audio.aac";
