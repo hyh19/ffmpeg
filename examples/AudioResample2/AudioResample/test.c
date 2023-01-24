@@ -119,7 +119,7 @@ static void read_data_and_resample(AVFormatContext *fmt_ctx, SwrContext *swr_ctx
     free_resample_buffer(src_data, dst_data);
 }
 
-static AVCodecContext* open_coder(){
+AVCodecContext* open_coder(){
     
     //打开编码器
     //avcodec_find_encoder(AV_CODEC_ID_AAC);
@@ -133,7 +133,7 @@ static AVCodecContext* open_coder(){
     codec_ctx->channels = 2;                            //输入音频 channel 个数
     codec_ctx->sample_rate = 44100;                     //输入音频的采样率
     codec_ctx->bit_rate = 0; //AAC_LC: 128K, AAC HE: 64K, AAC HE V2: 32K
-    codec_ctx->profile = FF_PROFILE_AAC_HE_V2; //阅读 ffmpeg 代码
+    codec_ctx->profile = FF_PROFILE_AAC_HE; //阅读 ffmpeg 代码
     
     //打开编码器
     if(avcodec_open2(codec_ctx, codec, NULL)<0){
@@ -145,38 +145,22 @@ static AVCodecContext* open_coder(){
     return codec_ctx;
 }
 
-static AVFrame* create_frame(){
-    
-    AVFrame *frame = NULL;
-    
-    //音频输入数据
-    frame = av_frame_alloc();
+AVFrame* create_frame(){
+    AVFrame *frame = av_frame_alloc();
     if(!frame){
-        printf("Error, No Memory!\n");
-        goto __ERROR;
+        
     }
     
-    //set parameters
     frame->nb_samples     = 512;                //单通道一个音频帧的采样数
     frame->format         = AV_SAMPLE_FMT_S16;  //每个采样的大小
     frame->channel_layout = AV_CH_LAYOUT_STEREO; //channel layout
-    
-    //alloc inner memory
     av_frame_get_buffer(frame, 0); // 512 * 2 * = 2048
-    if(!frame->data[0]){
-        printf("Error, Failed to alloc buf in frame!\n");
-        //内存泄漏
-        goto __ERROR;
+    
+    if(!frame->buf[0]){
+        
     }
     
     return frame;
-    
-__ERROR:
-    if(frame){
-        av_frame_free(&frame);
-    }
-    
-    return NULL;
 }
 
 void encode(AVCodecContext *ctx,
