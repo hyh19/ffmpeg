@@ -193,37 +193,11 @@ void encode(AVCodecContext *ctx,
     return;
 }
 
-// 录制音频
-void rec_audio() {
-    rec_status = 1;
-
-    av_log_set_level(AV_LOG_DEBUG);
-
-    avdevice_register_all();
-
-    AVFormatContext *fmt_ctx = open_input_device();
-    if (!fmt_ctx) {
-        goto __ERROR;
-    }
-
-    SwrContext *swr_ctx = create_swr_context();
-    if (!swr_ctx) {
-        goto __ERROR;
-    }
-    
-    //打开编码器上下文
-    AVCodecContext* c_ctx = open_coder();
-
-
-    const char *filename = "/Users/hyh/Downloads/audio.aac";
-    FILE *outfile = fopen(filename, "wb+");
-    if (!outfile) {
-        printf("Error, Failed to open file!\n");
-        goto __ERROR;
-    }
-
-    // read_data_and_resample(fmt_ctx, swr_ctx, outfile);
-    
+static
+void read_data_and_encode(AVFormatContext *fmt_ctx, //
+                          AVCodecContext *c_ctx,
+                          SwrContext* swr_ctx,
+                          FILE *outfile) {
     // 重采样输入缓冲区
     uint8_t **src_data = NULL;
     int src_linesize = 0;
@@ -275,6 +249,39 @@ void rec_audio() {
         av_packet_free(&newpkt);
     
     free_resample_buffer(src_data, dst_data);
+}
+
+// 录制音频
+void rec_audio() {
+    rec_status = 1;
+
+    av_log_set_level(AV_LOG_DEBUG);
+
+    avdevice_register_all();
+
+    AVFormatContext *fmt_ctx = open_input_device();
+    if (!fmt_ctx) {
+        goto __ERROR;
+    }
+
+    SwrContext *swr_ctx = create_swr_context();
+    if (!swr_ctx) {
+        goto __ERROR;
+    }
+    
+    //打开编码器上下文
+    AVCodecContext* c_ctx = open_coder();
+
+
+    const char *filename = "/Users/hyh/Downloads/audio.aac";
+    FILE *outfile = fopen(filename, "wb+");
+    if (!outfile) {
+        printf("Error, Failed to open file!\n");
+        goto __ERROR;
+    }
+
+    // read_data_and_resample(fmt_ctx, swr_ctx, outfile);
+    read_data_and_encode(fmt_ctx, c_ctx, swr_ctx, outfile);
     
     __ERROR:
 
