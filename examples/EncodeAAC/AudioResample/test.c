@@ -136,7 +136,7 @@ AVCodecContext *create_codec_context() {
     // https://bit.ly/3WBBeGN
     if (avcodec_open2(codec_ctx, codec, NULL) < 0) {
         avcodec_free_context(&codec_ctx);
-        printf("Error, Failed to open encoder!\n");
+        printf("Error, Failed to open codec!\n");
         return NULL;
     }
 
@@ -193,7 +193,7 @@ static int encode(AVCodecContext *ctx, AVFrame *frame, AVPacket *pkt, FILE *outf
 }
 
 // 读取数据并编码
-static int read_data_and_encode(AVFormatContext *fmt_ctx, AVCodecContext *codec_ctx, SwrContext *swr_ctx, FILE *outfile) {
+static int read_data_and_encode(AVFormatContext *fmt_ctx, SwrContext *swr_ctx, AVCodecContext *codec_ctx, FILE *outfile) {
     int ret = 0;
 
     // 重采样的输入缓冲区
@@ -307,7 +307,7 @@ void rec_audio() {
         goto __ERROR;
     }
 
-    read_data_and_encode(fmt_ctx, codec_ctx, swr_ctx, outfile);
+    read_data_and_encode(fmt_ctx, swr_ctx, codec_ctx, outfile);
 
     __ERROR:
 
