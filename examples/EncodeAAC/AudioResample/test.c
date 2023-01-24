@@ -167,9 +167,9 @@ static AVFrame *create_frame() {
 
 // 编码数据
 static int encode(AVCodecContext *ctx, AVFrame *frame, AVPacket *pkt, FILE *outfile) {
+    int ret;
     // 发送数据到编码器 https://bit.ly/3XzIV1A
-    if (avcodec_send_frame(ctx, frame) == 0) {
-        int ret;
+    if ((ret = avcodec_send_frame(ctx, frame)) == 0) {
         // 获取编码后的数据 https://bit.ly/3DaPcsu
         while ((ret = avcodec_receive_packet(ctx, pkt)) == 0) {
             fwrite(pkt->data, 1, (size_t) pkt->size, outfile);
@@ -182,7 +182,12 @@ static int encode(AVCodecContext *ctx, AVFrame *frame, AVPacket *pkt, FILE *outf
             return -1;
         }
     } else {
-        // TODO
+        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
+            return 0;
+        } else if (ret < 0) {
+            printf("Error, Failed to send frame!\n");
+            return -1;
+        }
     }
     return 0;
 }
