@@ -67,21 +67,21 @@ static int alloc_resample_buffers(uint8_t ***src_data, int *src_linesize, uint8_
 
     // 输入缓冲区 https://bit.ly/3R2cLcq
     ret = av_samples_alloc_array_and_samples(src_data, // 缓冲区地址
-            src_linesize,                        // 缓冲区大小
-            2,                                   // 声道个数
-            512,                                 // 单个声道的采样个数 4096 字节 / 4 字节（32 位）/ 2 声道= 512 采样/声道
-            AV_SAMPLE_FMT_FLT,                   // 采样位深
+            src_linesize,                              // 缓冲区大小
+            2,                                         // 声道个数
+            512,                                       // 单个声道的采样个数 4096 字节 / 4 字节（32 位）/ 2 声道= 512 采样/声道
+            AV_SAMPLE_FMT_FLT,                         // 采样位深
             0);
     if (ret < 0) {
         goto __ERROR;
     }
 
     // 输出缓冲区
-    av_samples_alloc_array_and_samples(dst_data, // 缓冲区地址
-            dst_linesize,                        // 缓冲区大小 512 采样/声道 * 2 字节（16 位）* 2 声道 = 2048 字节
-            2,                                   // 声道个数
-            512,                                 // 单个声道的采样个数
-            AV_SAMPLE_FMT_S16,                   // 采样位深
+    ret = av_samples_alloc_array_and_samples(dst_data, // 缓冲区地址
+            dst_linesize,                              // 缓冲区大小 512 采样/声道 * 2 字节（16 位）* 2 声道 = 2048 字节
+            2,                                         // 声道个数
+            512,                                       // 单个声道的采样个数
+            AV_SAMPLE_FMT_S16,                         // 采样位深
             0);
     if (ret < 0) {
         goto __ERROR;
@@ -128,9 +128,9 @@ AVCodecContext *create_codec_context() {
 
     codec_ctx->sample_fmt = AV_SAMPLE_FMT_S16;       // 输入的采样位深
     codec_ctx->channel_layout = AV_CH_LAYOUT_STEREO; // 输入的声道布局
-    codec_ctx->channels = 2;                         // 输入的声道个数
+    // codec_ctx->channels = 2;                      // 输入的声道个数
     codec_ctx->sample_rate = 44100;                  // 输入的采样频率
-    codec_ctx->bit_rate = 0;                         // AAC_LC: 128K, AAC HE: 64K, AAC HE V2: 32K
+    // codec_ctx->bit_rate = 0;                      // AAC_LC: 128K, AAC HE: 64K, AAC HE V2: 32K
     codec_ctx->profile = FF_PROFILE_AAC_HE;
 
     // https://bit.ly/3WBBeGN
