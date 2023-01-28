@@ -6,7 +6,7 @@
 
 static int status = 1;
 
-void set_status(int state){
+void set_status(int state) {
     status = state;
 }
 
@@ -132,7 +132,7 @@ static int read_ts(FILE *fp, unsigned int *ts) {
 }
 
 // 读取 flv 文件的数据，并写入 RTMPPacket 对象。
-static int read_data(FILE *flv, RTMPPacket **packet) {
+static int read_data(FILE *flv, RTMPPacket *packet) {
     int ret = -1;
     size_t data_size = 0;
 
@@ -160,7 +160,7 @@ static int read_data(FILE *flv, RTMPPacket **packet) {
 
     printf("tag header, ts: %u, tt: %d, tag_data_size: %d\n", ts, tt, tag_data_size);
 
-    data_size = fread((*packet)->m_body, 1, tag_data_size, flv);
+    data_size = fread(packet->m_body, 1, tag_data_size, flv);
     if (tag_data_size != data_size) {
         printf("Failed to read tag body from flv (data_size=%zu, tds=%d)!\n",
                 data_size,
@@ -168,10 +168,10 @@ static int read_data(FILE *flv, RTMPPacket **packet) {
         goto __ERROR;
     }
 
-    (*packet)->m_headerType = RTMP_PACKET_SIZE_LARGE;
-    (*packet)->m_nTimeStamp = ts;
-    (*packet)->m_packetType = (uint8_t) tt;
-    (*packet)->m_nBodySize = tag_data_size;
+    packet->m_headerType = RTMP_PACKET_SIZE_LARGE;
+    packet->m_nTimeStamp = ts;
+    packet->m_packetType = (uint8_t) tt;
+    packet->m_nBodySize = tag_data_size;
 
     read_u32(flv, &tag_pre_size);
 
@@ -193,7 +193,7 @@ static void send_data(FILE *flv, RTMP *rtmp) {
 
     while (1) {
         // 2、从 flv 文件中读取数据
-        if (read_data(flv, &packet)) {
+        if (read_data(flv, packet)) {
             printf("Error, failed to read data from flv!\n");
             break;
         }
