@@ -6,23 +6,23 @@ void set_status(int status) {
     rec_status = status;
 }
 
-// 创建输入上下文（绑定输入设备）
-static AVFormatContext *create_fmt_context() {
-    AVFormatContext *fmt_ctx = NULL;
+static AVFormatContext *create_fmt_ctx(void) {
+    int ret = 0;
+    AVInputFormat *ifmt = NULL;
+    AVFormatContext *ifmt_ctx = NULL;
     AVDictionary *options = NULL;
+    // ffmpeg -f avfoundation -list_devices true -i ""
+    const char *device_desc = ":default";
 
-    AVInputFormat *fmt = av_find_input_format("avfoundation");
-    if (!fmt) {
+    ifmt = av_find_input_format("avfoundation");
+    if (!ifmt) {
         printf("Error, Failed to find input format!\n");
         return NULL;
     }
 
-    // ffmpeg -f avfoundation -list_devices true -i ""
-    char *device = ":2";
-
-    int ret;
     // https://bit.ly/3ZZnkkD
-    if ((ret = avformat_open_input(&fmt_ctx, device, fmt, &options)) < 0) {
+    ret = avformat_open_input(&ifmt_ctx, device_desc, ifmt, &options);
+    if (ret < 0) {
         printf("Error, Failed to open input format!\n");
         // TODO
         // char error[1024] = {0,};
@@ -31,17 +31,15 @@ static AVFormatContext *create_fmt_context() {
         return NULL;
     }
 
-    return fmt_ctx;
+    return ifmt_ctx;
 }
 
-// 读取数据
-static int read_data(AVFormatContext *fmt_ctx, FILE *outfile) {
+static int read_data(AVFormatContext *ifmt_ctx, FILE *outfile) {
     int ret = 0;
-    
     AVPacket pkt;
     
-    // 从输入设备读取数据 https://bit.ly/3HoAVK3
-    while ((ret = av_read_frame(fmt_ctx, &pkt)) == 0 &&
+    // https://bit.ly/3HoAVK3
+    while ((ret = av_read_frame(ifmt_ctx, &pkt)) == 0 &&
             rec_status) {
         av_log(NULL, AV_LOG_INFO,
                 "packet size is %d (%p)\n",
@@ -55,29 +53,33 @@ static int read_data(AVFormatContext *fmt_ctx, FILE *outfile) {
     if (ret < 0 && ret != AVERROR_EOF) {
         printf("Error, Failed to read frame!\n");
     }
+    
     return ret;
 }
 
-void rec_audio() {
+void rec_audio(void) {
+    AVFormatContext *ifmt_ctx = NULL;
+    const char *filename = "/Users/hyh/Downloads/audio.pcm";
+    FILE *outfile = NULL;
+    
     rec_status = 1;
 
     av_log_set_level(AV_LOG_DEBUG);
 
     avdevice_register_all();
 
-    AVFormatContext *fmt_ctx = create_fmt_context();
-    if (!fmt_ctx) {
+    ifmt_ctx = create_fmt_ctx();
+    if (!ifmt_ctx) {
         goto __ERROR;
     }
     
-    const char *filename = "/Users/hyh/Downloads/audio.pcm";
-    FILE *outfile = fopen(filename, "wb+");
+    outfile = fopen(filename, "wb+");
     if (!outfile) {
         printf("Error, Failed to open file!\n");
         goto __ERROR;
     }
 
-    if (read_data(fmt_ctx, outfile) < 0) {
+    if (read_data(ifmt_ctx, outfile) < 0) {
         goto __ERROR;
     }
 
@@ -87,8 +89,8 @@ void rec_audio() {
         fclose(outfile);
     }
 
-    if (fmt_ctx) {
-        avformat_close_input(&fmt_ctx);
+    if (ifmt_ctx) {
+        avformat_close_input(&ifmt_ctx);
     }
 
     av_log(NULL, AV_LOG_DEBUG, "finish!\n");
