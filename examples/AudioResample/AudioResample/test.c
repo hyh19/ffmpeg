@@ -6,76 +6,72 @@ void set_status(int status) {
     rec_status = status;
 }
 
-// 初始化重采样上下文
-SwrContext *init_swr() {
+// 创建重采样上下文
+SwrContext *create_swr_ctx(void) {
     SwrContext *swr_ctx = NULL;
 
-    swr_ctx = swr_alloc_set_opts(NULL, // 重采样上下文
+    swr_ctx = swr_alloc_set_opts(NULL,
             AV_CH_LAYOUT_STEREO, // 输出的 Channel布局
             AV_SAMPLE_FMT_S16,   // 输出的采样格式（采样位深/大小）
             44100,               // 输出的采样频率
-            AV_CH_LAYOUT_STEREO, // 输入的 Channel布局
+            AV_CH_LAYOUT_MONO,   // 输入的 Channel布局 4
             AV_SAMPLE_FMT_FLT,   // 输入的采样格式（采样位深/大小）
-            44100,               // 输入的采样频率
+            48000,               // 输入的采样频率
             0, NULL);
 
     if (!swr_ctx) {
-        // TODO
+        exit(1);
     }
 
     if (swr_init(swr_ctx) < 0) {
-        // TODO
+        exit(1);
     }
 
     return swr_ctx;
 }
 
-void rec_audio() {
+void rec_audio(void) {
+    int ret = 0;
+    char error[1024] = {0,};
+    AVInputFormat *in_fmt = NULL;
+    AVFormatContext *fmt_ctx = NULL;
+    AVDictionary *options = NULL;
+    // ffmpeg -f avfoundation -list_devices true -i ""
+    // [[video device]:[audio device]]
+    const char *device = ":default";
+    AVPacket pkt;
+    FILE *out_file = NULL;
+    SwrContext *swr_ctx = NULL;
+    uint8_t **src_data = NULL; // 重采样输入缓冲区
+    int src_linesize = 0;
+    uint8_t **dst_data = NULL; // 重采样输出缓冲区
+    int dst_linesize = 0;
+    
     rec_status = 1;
 
     av_log_set_level(AV_LOG_DEBUG);
 
     avdevice_register_all();
 
-    AVFormatContext *fmt_ctx = NULL;
+    in_fmt = av_find_input_format("avfoundation");
 
-    // ffmpeg -f avfoundation -list_devices true -i ""
-    // [[video device]:[audio device]]
-    char *device = ":2";
-
-    AVInputFormat *in_fmt = av_find_input_format("avfoundation");
-
-    AVDictionary *options = NULL;
-
-    int ret = 0;
-    char error[1024] = {0,};
-
-    if ((ret = avformat_open_input(&fmt_ctx, device, in_fmt, &options)) < 0) {
+    ret = avformat_open_input(&fmt_ctx, device, in_fmt, &options);
+    if (ret < 0) {
         av_strerror(ret, error, 1024);
         fprintf(stderr, "Failed to open audio device, [%d] %s\n", ret, error);
         return;
     }
 
-    AVPacket pkt;
-
     // create file
-    FILE *out_file = fopen("/Users/hyh/Downloads/audio.pcm", "wb+");
+    out_file = fopen("/Users/hyh/Downloads/resample.pcm", "wb+");
 
-    SwrContext *swr_ctx = init_swr();
-
-    // 重采样输入缓冲区
-    uint8_t **src_data = NULL;
-    int src_linesize = 0;
-
-    // 重采样输出缓冲区
-    uint8_t **dst_data = NULL;
-    int dst_linesize = 0;
+    swr_ctx = create_swr_ctx();
 
     // 创建输入缓冲区
     av_samples_alloc_array_and_samples(&src_data, // 缓冲区地址
             &src_linesize,     // 缓冲区大小
-            2,                 // 通道个数
-            512,               // 单通道采样个数 4096字节 / 4字节（32位）= 1024 / 2（通道数）= 512 个采样
+            1,                 // 通道个数
+            512,               // 单通道采样个数 2048字节 / 4字节（32位）= 512 / 1（通道数）= 512 个采样
             AV_SAMPLE_FMT_FLT, // 采样格式
             0);
 
