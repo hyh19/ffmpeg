@@ -33,19 +33,17 @@ SwrContext *create_swr_ctx(void) {
 void rec_audio(void) {
     int ret = 0;
     char error[1024] = {0,};
-    AVInputFormat *in_fmt = NULL;
-    AVFormatContext *fmt_ctx = NULL;
+    AVInputFormat *ifmt = NULL;
+    AVFormatContext *ifmt_ctx = NULL;
     AVDictionary *options = NULL;
     // ffmpeg -f avfoundation -list_devices true -i ""
     // [[video device]:[audio device]]
     const char *device = ":default";
     AVPacket pkt;
-    FILE *out_file = NULL;
+    FILE *outfile = NULL;
     SwrContext *swr_ctx = NULL;
-    uint8_t **src_data = NULL; // 重采样输入缓冲区
-    int src_linesize = 0;
-    uint8_t **dst_data = NULL; // 重采样输出缓冲区
-    int dst_linesize = 0;
+    uint8_t **src_data = NULL, **dst_data = NULL;; // 重采样输入/输出缓冲区
+    int src_linesize = 0, dst_linesize = 0;
     
     rec_status = 1;
 
@@ -53,9 +51,9 @@ void rec_audio(void) {
 
     avdevice_register_all();
 
-    in_fmt = av_find_input_format("avfoundation");
+    ifmt = av_find_input_format("avfoundation");
 
-    ret = avformat_open_input(&fmt_ctx, device, in_fmt, &options);
+    ret = avformat_open_input(&ifmt_ctx, device, ifmt, &options);
     if (ret < 0) {
         av_strerror(ret, error, 1024);
         fprintf(stderr, "Failed to open audio device, [%d] %s\n", ret, error);
@@ -63,7 +61,7 @@ void rec_audio(void) {
     }
 
     // create file
-    out_file = fopen("/Users/hyh/Downloads/resample.pcm", "wb+");
+    outfile = fopen("/Users/hyh/Downloads/resample.pcm", "wb+");
 
     swr_ctx = create_swr_ctx();
 
@@ -84,7 +82,7 @@ void rec_audio(void) {
             0);
 
     // read data from device
-    while (av_read_frame(fmt_ctx, &pkt) == 0 &&
+    while (av_read_frame(ifmt_ctx, &pkt) == 0 &&
             rec_status) {
         av_log(NULL, AV_LOG_INFO,
                 "packet size is %d (%p)\n",
@@ -101,13 +99,13 @@ void rec_audio(void) {
                 512);                        // 输入的单通道采样个数
 
         // write file
-        fwrite(dst_data[0], 1, (size_t) dst_linesize, out_file);
-        fflush(out_file);
+        fwrite(dst_data[0], 1, (size_t) dst_linesize, outfile);
+        fflush(outfile);
 
         av_packet_unref(&pkt);
     }
 
-    fclose(out_file);
+    fclose(outfile);
 
     // 释放重采样输入/输出缓冲区
     if (src_data) {
@@ -124,7 +122,7 @@ void rec_audio(void) {
     swr_free(&swr_ctx);
 
     // close device and release ctx
-    avformat_close_input(&fmt_ctx);
+    avformat_close_input(&ifmt_ctx);
 
     av_log(NULL, AV_LOG_DEBUG, "finish!\n");
 }
