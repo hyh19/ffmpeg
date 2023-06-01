@@ -1,4 +1,4 @@
-#include "test.h"
+#include "encode_video.h"
 
 static int rec_status = 0;
 

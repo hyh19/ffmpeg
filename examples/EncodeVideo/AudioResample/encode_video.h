@@ -1,5 +1,5 @@
-#ifndef test_h
-#define test_h
+#ifndef encode_video_h
+#define encode_video_h
 
 #include <stdio.h>
 #include "libavutil/avutil.h"
@@ -11,4 +11,4 @@
 void set_status(int status);
 void rec_video(void);
 
-#endif /* test_h */
+#endif /* encode_video_h */
