@@ -51,7 +51,7 @@
 		9D3048EE23EFB1030066D999 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9D3048F123EFB1030066D999 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9D3048F323EFB1030066D999 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9D3048F423EFB1030066D999 /* AudioResample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AudioResample.entitlements; sourceTree = "<group>"; };
+		9D3048F423EFB1030066D999 /* CaptureVideo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CaptureVideo.entitlements; sourceTree = "<group>"; };
 		9D3048FA23EFB3610066D999 /* AudioResample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AudioResample-Bridging-Header.h"; sourceTree = "<group>"; };
 		9D3048FB23EFB3610066D999 /* capture_video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = capture_video.h; sourceTree = "<group>"; };
 		9D3048FC23EFB3610066D999 /* capture_video.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = capture_video.c; sourceTree = "<group>"; };
@@ -240,7 +240,7 @@
 				9D3048EE23EFB1030066D999 /* Assets.xcassets */,
 				9D3048F023EFB1030066D999 /* Main.storyboard */,
 				9D3048F323EFB1030066D999 /* Info.plist */,
-				9D3048F423EFB1030066D999 /* AudioResample.entitlements */,
+				9D3048F423EFB1030066D999 /* CaptureVideo.entitlements */,
 				9D3048FA23EFB3610066D999 /* AudioResample-Bridging-Header.h */,
 			);
 			path = AudioResample;
