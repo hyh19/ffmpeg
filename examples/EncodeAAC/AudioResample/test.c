@@ -198,8 +198,8 @@ static int read_data_and_encode(AVFormatContext *fmt_ctx, SwrContext *swr_ctx, A
     AVFrame *frame = NULL;
     AVPacket *sample_pkt = NULL, *encode_pkt = NULL;
 
-    if (alloc_resample_buffers(&src_data, &src_linesize, &dst_data, &dst_linesize) < 0) {
-        ret = -1;
+    ret = alloc_resample_buffers(&src_data, &src_linesize, &dst_data, &dst_linesize);
+    if (ret < 0) {
         goto __ERROR;
     }
 
@@ -239,8 +239,8 @@ static int read_data_and_encode(AVFormatContext *fmt_ctx, SwrContext *swr_ctx, A
 
         // 开始重采样 https://bit.ly/3H3SzT1
         // 512 单个声道的采样个数
-        if (swr_convert(swr_ctx, dst_data, 512, (const uint8_t **) src_data, 512) < 0) {
-            ret = -1;
+        ret = swr_convert(swr_ctx, dst_data, 512, (const uint8_t **) src_data, 512);
+        if (ret < 0) {
             printf("Error, Failed to convert sample!\n");
             goto __ERROR;
         }
@@ -249,8 +249,8 @@ static int read_data_and_encode(AVFormatContext *fmt_ctx, SwrContext *swr_ctx, A
         memcpy((void *) frame->data[0], dst_data[0], dst_linesize);
 
         // 开始编码
-        if (encode(codec_ctx, frame, encode_pkt, outfile) < 0) {
-            ret = -1;
+        ret = encode(codec_ctx, frame, encode_pkt, outfile);
+        if (ret < 0) {
             printf("Error, Failed to encode data!\n");
             goto __ERROR;
         }
