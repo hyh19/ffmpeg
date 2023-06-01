@@ -1,5 +1,5 @@
-#ifndef test_h
-#define test_h
+#ifndef audio_resample_h
+#define audio_resample_h
 
 #include <stdio.h>
 #include "libavutil/avutil.h"
@@ -11,4 +11,4 @@
 void set_status(int status);
 void rec_audio(void);
 
-#endif /* test_h */
+#endif /* audio_resample_h */
