@@ -1,4 +1,4 @@
-#include "test.h"
+#include "audio_record.h"
 
 static int rec_status = 0;
 
