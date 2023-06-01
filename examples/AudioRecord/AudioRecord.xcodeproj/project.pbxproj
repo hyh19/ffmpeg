@@ -19,7 +19,7 @@
 		9D3048ED23EFB1010066D999 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3048EC23EFB1010066D999 /* ViewController.swift */; };
 		9D3048EF23EFB1030066D999 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D3048EE23EFB1030066D999 /* Assets.xcassets */; };
 		9D3048F223EFB1030066D999 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D3048F023EFB1030066D999 /* Main.storyboard */; };
-		9D3048FD23EFB3610066D999 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D3048FC23EFB3610066D999 /* test.c */; };
+		9D3048FD23EFB3610066D999 /* audio_record.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D3048FC23EFB3610066D999 /* audio_record.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,8 +61,8 @@
 		9D3048F323EFB1030066D999 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9D3048F423EFB1030066D999 /* AudioResample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AudioResample.entitlements; sourceTree = "<group>"; };
 		9D3048FA23EFB3610066D999 /* AudioResample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AudioResample-Bridging-Header.h"; sourceTree = "<group>"; };
-		9D3048FB23EFB3610066D999 /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
-		9D3048FC23EFB3610066D999 /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
+		9D3048FB23EFB3610066D999 /* audio_record.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = audio_record.h; sourceTree = "<group>"; };
+		9D3048FC23EFB3610066D999 /* audio_record.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = audio_record.c; sourceTree = "<group>"; };
 		9D30490023EFB6750066D999 /* libpostproc.55.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpostproc.55.dylib; sourceTree = "<group>"; };
 		9D30490123EFB6750066D999 /* libswscale.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libswscale.dylib; sourceTree = "<group>"; };
 		9D30490323EFB6750066D999 /* version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
@@ -241,8 +241,8 @@
 		9D3048E923EFB1010066D999 /* AudioResample */ = {
 			isa = PBXGroup;
 			children = (
-				9D3048FC23EFB3610066D999 /* test.c */,
-				9D3048FB23EFB3610066D999 /* test.h */,
+				9D3048FC23EFB3610066D999 /* audio_record.c */,
+				9D3048FB23EFB3610066D999 /* audio_record.h */,
 				9D3048EA23EFB1010066D999 /* AppDelegate.swift */,
 				9D3048EC23EFB1010066D999 /* ViewController.swift */,
 				9D3048EE23EFB1030066D999 /* Assets.xcassets */,
@@ -569,7 +569,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9D3048FD23EFB3610066D999 /* test.c in Sources */,
+				9D3048FD23EFB3610066D999 /* audio_record.c in Sources */,
 				9D3048ED23EFB1010066D999 /* ViewController.swift in Sources */,
 				9D3048EB23EFB1010066D999 /* AppDelegate.swift in Sources */,
 			);
