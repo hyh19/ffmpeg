@@ -216,7 +216,7 @@
 		9D3048DE23EFB1010066D999 = {
 			isa = PBXGroup;
 			children = (
-				9D3048E923EFB1010066D999 /* AudioResample */,
+				9D3048E923EFB1010066D999 /* EncodeAAC */,
 				9D3048E823EFB1010066D999 /* Products */,
 				9D3048FE23EFB6740066D999 /* Frameworks */,
 			);
@@ -230,7 +230,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		9D3048E923EFB1010066D999 /* AudioResample */ = {
+		9D3048E923EFB1010066D999 /* EncodeAAC */ = {
 			isa = PBXGroup;
 			children = (
 				9D3048FC23EFB3610066D999 /* encode_aac.c */,
@@ -243,7 +243,7 @@
 				9D3048F423EFB1030066D999 /* EncodeAAC.entitlements */,
 				9D3048FA23EFB3610066D999 /* EncodeAAC-Bridging-Header.h */,
 			);
-			path = AudioResample;
+			path = EncodeAAC;
 			sourceTree = "<group>";
 		};
 		9D3048FE23EFB6740066D999 /* Frameworks */ = {
@@ -697,15 +697,15 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = AudioResample/Info.plist;
+				INFOPLIST_FILE = EncodeAAC/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = /Users/hyh/ffmpeg/n4.2.2/lib;
-				PRODUCT_BUNDLE_IDENTIFIER = avdance.AudioResample;
+				PRODUCT_BUNDLE_IDENTIFIER = avdance.EncodeAAC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "AudioResample/EncodeAAC-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "EncodeAAC/EncodeAAC-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				USER_HEADER_SEARCH_PATHS = /Users/hyh/ffmpeg/n4.2.2/include;
@@ -721,15 +721,15 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = AudioResample/Info.plist;
+				INFOPLIST_FILE = EncodeAAC/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = /Users/hyh/ffmpeg/n4.2.2/lib;
-				PRODUCT_BUNDLE_IDENTIFIER = avdance.AudioResample;
+				PRODUCT_BUNDLE_IDENTIFIER = avdance.EncodeAAC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "AudioResample/EncodeAAC-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "EncodeAAC/EncodeAAC-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				USER_HEADER_SEARCH_PATHS = /Users/hyh/ffmpeg/n4.2.2/include;
 			};

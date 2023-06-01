@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  AudioResample
+//  EncodeAAC
 //
 //  Created by lichao on 2020/2/9.
 //  Copyright © 2020年 lichao. All rights reserved.
