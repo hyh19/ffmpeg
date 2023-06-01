@@ -6,15 +6,20 @@ void set_status(int status) {
     rec_status = status;
 }
 
-// 创建输入上下文（绑定输入设备）
-static AVFormatContext *create_fmt_context() {
-    AVFormatContext *fmt_ctx = NULL;
+static AVFormatContext *create_fmt_ctx(void) {
+    int ret = 0;
+    AVInputFormat *ifmt = NULL;
+    AVFormatContext *ifmt_ctx = NULL;
     AVDictionary *options = NULL;
-
+    // https://ffmpeg.org/ffmpeg-devices.html#avfoundation
+    // Print the list of AVFoundation supported devices and exit:
+    // ffmpeg -f avfoundation -list_devices true -i ""
+    const char *device = "default";
+    
     // show available devices
     // ffmpeg -devices
-    AVInputFormat *fmt = av_find_input_format("avfoundation");
-    if (!fmt) {
+    ifmt = av_find_input_format("avfoundation");
+    if (!ifmt) {
         printf("Error, Failed to find input format!\n");
         return NULL;
     }
@@ -25,15 +30,10 @@ static AVFormatContext *create_fmt_context() {
     // show available pixel formats
     // ffmpeg -pix_fmts
     av_dict_set(&options, "pixel_format", "nv12", 0);
-
-    // https://ffmpeg.org/ffmpeg-devices.html#avfoundation
-    // Print the list of AVFoundation supported devices and exit:
-    // ffmpeg -f avfoundation -list_devices true -i ""
-    char *device = "1";
-
-    int ret;
+    
     // https://bit.ly/3ZZnkkD
-    if ((ret = avformat_open_input(&fmt_ctx, device, fmt, &options)) < 0) {
+    ret = avformat_open_input(&ifmt_ctx, device, ifmt, &options);
+    if (ret < 0) {
         printf("Error, Failed to open input format!\n");
         // TODO
         // char error[1024] = {0,};
@@ -42,14 +42,13 @@ static AVFormatContext *create_fmt_context() {
         return NULL;
     }
 
-    return fmt_ctx;
+    return ifmt_ctx;
 }
 
-// 读取数据
 static int read_data(AVFormatContext *fmt_ctx, FILE *outfile) {
     int ret = 0;
-
     AVPacket pkt;
+    
     // 从输入设备读取数据 https://bit.ly/3HoAVK3
     while ((ret = av_read_frame(fmt_ctx, &pkt)) == 0 &&
             rec_status) {
@@ -60,7 +59,6 @@ static int read_data(AVFormatContext *fmt_ctx, FILE *outfile) {
         // 640 x 480 x 1.5 字节（12 位） = 460800 字节
         fwrite(pkt.data, 1, 460800, outfile);
         fflush(outfile);
-
         av_packet_unref(&pkt);
     }
 
@@ -71,27 +69,26 @@ static int read_data(AVFormatContext *fmt_ctx, FILE *outfile) {
     return ret;
 }
 
-// 打开文件
 static FILE *open_file(const char *filename) {
-    FILE *file = fopen(filename, "wb+");
-    if (!file) {
+    FILE *f = fopen(filename, "wb+");
+    if (!f) {
         printf("Error, Failed to open file!\n");
         return NULL;
     }
-    return file;
+    return f;
 }
 
-void rec_video() {
+void rec_video(void) {
+    AVFormatContext *fmt_ctx = NULL;
+    FILE *outfile = NULL;
+    
     rec_status = 1;
 
     av_log_set_level(AV_LOG_DEBUG);
 
     avdevice_register_all();
 
-    AVFormatContext *fmt_ctx = NULL;
-    FILE *outfile = NULL;
-
-    fmt_ctx = create_fmt_context();
+    fmt_ctx = create_fmt_ctx();
     if (!fmt_ctx) {
         goto __ERROR;
     }
