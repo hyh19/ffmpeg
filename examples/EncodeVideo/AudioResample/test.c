@@ -110,8 +110,7 @@ static AVFrame *create_frame(void) {
     frame->height = 480;
     frame->format = AV_PIX_FMT_YUV420P;
 
-    av_frame_get_buffer(frame, 32); // 视频按 32 位对齐
-    
+    av_frame_get_buffer(frame, 0);
     if (!frame->data[0]) {
         av_frame_free(&frame);
         printf("Error, Failed to get frame buffer!\n");
