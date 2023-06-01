@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  AudioResample
+//  EncodeVideo
 //
 //  Created by hyh on 2020/2/9.
 //  Copyright © 2020年 hyh. All rights reserved.
