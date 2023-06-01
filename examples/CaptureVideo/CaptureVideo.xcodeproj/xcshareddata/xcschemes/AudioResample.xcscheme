@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9D3048E623EFB1010066D999"
-               BuildableName = "AudioResample.app"
-               BlueprintName = "AudioResample"
-               ReferencedContainer = "container:AudioResample.xcodeproj">
+               BuildableName = "CaptureVideo.app"
+               BlueprintName = "CaptureVideo"
+               ReferencedContainer = "container:CaptureVideo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -44,9 +44,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9D3048E623EFB1010066D999"
-            BuildableName = "AudioResample.app"
-            BlueprintName = "AudioResample"
-            ReferencedContainer = "container:AudioResample.xcodeproj">
+            BuildableName = "CaptureVideo.app"
+            BlueprintName = "CaptureVideo"
+            ReferencedContainer = "container:CaptureVideo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -61,9 +61,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9D3048E623EFB1010066D999"
-            BuildableName = "AudioResample.app"
-            BlueprintName = "AudioResample"
-            ReferencedContainer = "container:AudioResample.xcodeproj">
+            BuildableName = "CaptureVideo.app"
+            BlueprintName = "CaptureVideo"
+            ReferencedContainer = "container:CaptureVideo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

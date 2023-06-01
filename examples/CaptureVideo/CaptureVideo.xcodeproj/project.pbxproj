@@ -45,7 +45,7 @@
 		1886D6F6297E8433006D4AC5 /* libswscale.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswscale.a; path = "../../../../ffmpeg/n4.2.2-1/lib/libswscale.a"; sourceTree = "<group>"; };
 		1886D6F7297E8433006D4AC5 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavutil.a; path = "../../../../ffmpeg/n4.2.2-1/lib/libavutil.a"; sourceTree = "<group>"; };
 		1886D6F8297E8433006D4AC5 /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswresample.a; path = "../../../../ffmpeg/n4.2.2-1/lib/libswresample.a"; sourceTree = "<group>"; };
-		9D3048E723EFB1010066D999 /* AudioResample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioResample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D3048E723EFB1010066D999 /* CaptureVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CaptureVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D3048EA23EFB1010066D999 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9D3048EC23EFB1010066D999 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		9D3048EE23EFB1030066D999 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -225,7 +225,7 @@
 		9D3048E823EFB1010066D999 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9D3048E723EFB1010066D999 /* AudioResample.app */,
+				9D3048E723EFB1010066D999 /* CaptureVideo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -480,9 +480,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9D3048E623EFB1010066D999 /* AudioResample */ = {
+		9D3048E623EFB1010066D999 /* CaptureVideo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9D3048F723EFB1030066D999 /* Build configuration list for PBXNativeTarget "AudioResample" */;
+			buildConfigurationList = 9D3048F723EFB1030066D999 /* Build configuration list for PBXNativeTarget "CaptureVideo" */;
 			buildPhases = (
 				9D3048E323EFB1010066D999 /* Sources */,
 				9D3048E423EFB1010066D999 /* Frameworks */,
@@ -492,9 +492,9 @@
 			);
 			dependencies = (
 			);
-			name = AudioResample;
+			name = CaptureVideo;
 			productName = AudioResample;
-			productReference = 9D3048E723EFB1010066D999 /* AudioResample.app */;
+			productReference = 9D3048E723EFB1010066D999 /* CaptureVideo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -518,7 +518,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 9D3048E223EFB1010066D999 /* Build configuration list for PBXProject "AudioResample" */;
+			buildConfigurationList = 9D3048E223EFB1010066D999 /* Build configuration list for PBXProject "CaptureVideo" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -531,7 +531,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9D3048E623EFB1010066D999 /* AudioResample */,
+				9D3048E623EFB1010066D999 /* CaptureVideo */,
 			);
 		};
 /* End PBXProject section */
@@ -738,7 +738,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9D3048E223EFB1010066D999 /* Build configuration list for PBXProject "AudioResample" */ = {
+		9D3048E223EFB1010066D999 /* Build configuration list for PBXProject "CaptureVideo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9D3048F523EFB1030066D999 /* Debug */,
@@ -747,7 +747,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9D3048F723EFB1030066D999 /* Build configuration list for PBXNativeTarget "AudioResample" */ = {
+		9D3048F723EFB1030066D999 /* Build configuration list for PBXNativeTarget "CaptureVideo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9D3048F823EFB1030066D999 /* Debug */,
