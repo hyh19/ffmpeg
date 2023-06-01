@@ -62,7 +62,7 @@ static SwrContext *create_swr_ctx(void) {
 
 // 分配重采样的输入/输出缓冲区
 static int alloc_resample_buffers(uint8_t ***src_data, int *src_linesize, uint8_t ***dst_data, int *dst_linesize) {
-    int ret;
+    int ret = 0;
 
     // 输入缓冲区 https://bit.ly/3R2cLcq
     ret = av_samples_alloc_array_and_samples(src_data, // 缓冲区地址
@@ -86,13 +86,13 @@ static int alloc_resample_buffers(uint8_t ***src_data, int *src_linesize, uint8_
         goto __ERROR;
     }
 
-    return 0;
-
     __ERROR:
 
-    printf("Error, Failed to alloc resample buffers!\n");
+    if (ret < 0) {
+        printf("Error, Failed to alloc resample buffers!\n");
+    }
 
-    return -1;
+    return ret;
 }
 
 // 释放重采样的输入/输出缓冲区
@@ -114,7 +114,6 @@ AVCodecContext *create_codec_ctx(void) {
     
     // avcodec_find_encoder(AV_CODEC_ID_AAC); https://bit.ly/3iWQyAb
     codec = avcodec_find_encoder_by_name("libfdk_aac");
-
     if (!codec) {
         printf("Error, Failed to find encoder!\n");
         return NULL;
@@ -171,7 +170,7 @@ static int encode(AVCodecContext *ctx, AVFrame *frame, AVPacket *pkt, FILE *outf
     
     ret = avcodec_send_frame(ctx, frame);
     if (ret < 0) {
-        return -1;
+        return ret;
     }
     
     while (ret >= 0) {
@@ -180,14 +179,14 @@ static int encode(AVCodecContext *ctx, AVFrame *frame, AVPacket *pkt, FILE *outf
             return 0;
         } else if (ret < 0) {
             printf("Error, Failed to receive packet!\n");
-            return -1;
+            return ret;
         }
         fwrite(pkt->data, 1, (size_t) pkt->size, outfile);
         fflush(outfile);
         av_packet_unref(pkt);
     }
 
-    return 0;
+    return ret;
 }
 
 // 读取数据并编码
