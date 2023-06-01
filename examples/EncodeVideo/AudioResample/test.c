@@ -6,8 +6,7 @@ void set_status(int status) {
     rec_status = status;
 }
 
-// 创建输入上下文（绑定输入设备）
-static AVFormatContext *create_fmt_context() {
+static AVFormatContext *create_fmt_context(void) {
     AVFormatContext *fmt_ctx = NULL;
     AVDictionary *options = NULL;
 
@@ -29,7 +28,7 @@ static AVFormatContext *create_fmt_context() {
     // https://ffmpeg.org/ffmpeg-devices.html#avfoundation
     // Print the list of AVFoundation supported devices and exit:
     // ffmpeg -f avfoundation -list_devices true -i ""
-    char *device = "1";
+    char *device = "default";
 
     int ret;
     // https://bit.ly/3ZZnkkD
@@ -45,8 +44,7 @@ static AVFormatContext *create_fmt_context() {
     return fmt_ctx;
 }
 
-// 创建编码上下文（绑定编码器）
-static AVCodecContext *create_codec_context() {
+static AVCodecContext *create_codec_context(void) {
     // https://bit.ly/3iWQyAb
     AVCodec *codec = avcodec_find_encoder_by_name("libx264");
 
@@ -101,8 +99,7 @@ static AVCodecContext *create_codec_context() {
     return codec_ctx;
 }
 
-// 创建视频帧（缓冲区）
-static AVFrame *create_frame() {
+static AVFrame *create_frame(void) {
     AVFrame *frame = av_frame_alloc();
     if (!frame) {
         printf("Error, Failed to alloc frame!\n");
@@ -124,31 +121,30 @@ static AVFrame *create_frame() {
     return frame;
 }
 
-// 编码数据
-static int encode(AVCodecContext *ctx, AVFrame *frame, AVPacket *pkt, FILE *outfile) {
-    int ret;
+static int encode(AVCodecContext *c, AVFrame *frame, AVPacket *pkt, FILE *outfile) {
+    int ret = 0;
+    
     // 发送数据到编码器 https://bit.ly/3XzIV1A
-    if ((ret = avcodec_send_frame(ctx, frame)) == 0) {
+    ret = avcodec_send_frame(c, frame);
+    if (ret < 0) {
+        return ret;
+    }
+    
+    while (ret >= 0) {
         // 获取编码后的数据 https://bit.ly/3DaPcsu
-        while ((ret = avcodec_receive_packet(ctx, pkt)) == 0) {
-            fwrite(pkt->data, 1, (size_t) pkt->size, outfile);
-            fflush(outfile);
-        }
+        ret = avcodec_receive_packet(c, pkt);
         if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
             return 0;
         } else if (ret < 0) {
             printf("Error, Failed to receive packet!\n");
-            return -1;
+            return ret;
         }
-    } else {
-        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
-            return 0;
-        } else if (ret < 0) {
-            printf("Error, Failed to send frame!\n");
-            return -1;
-        }
+        fwrite(pkt->data, 1, (size_t) pkt->size, outfile);
+        fflush(outfile);
+        av_packet_unref(pkt);
     }
-    return 0;
+
+    return ret;
 }
 
 // 读取数据并编码
@@ -206,11 +202,7 @@ static int read_data_and_encode(AVFormatContext *fmt_ctx, AVCodecContext *codec_
         av_packet_unref(&sample_pkt);
     }
     // 强制将编码器缓冲区剩余的数据编码输出
-    if (encode(codec_ctx, frame, encode_pkt, outfile) < 0) {
-        ret = -1;
-        printf("Error, Failed to encode data!\n");
-        goto __ERROR;
-    }
+    encode(codec_ctx, NULL, encode_pkt, outfile);
 
     __ERROR:
 
@@ -225,17 +217,16 @@ static int read_data_and_encode(AVFormatContext *fmt_ctx, AVCodecContext *codec_
     return ret;
 }
 
-// 打开文件
 static FILE *open_file(const char *filename) {
-    FILE *file = fopen(filename, "wb+");
-    if (!file) {
+    FILE *f = fopen(filename, "wb+");
+    if (!f) {
         printf("Error, Failed to open file!\n");
         return NULL;
     }
-    return file;
+    return f;
 }
 
-void rec_video() {
+void rec_video(void) {
     rec_status = 1;
 
     av_log_set_level(AV_LOG_DEBUG);
