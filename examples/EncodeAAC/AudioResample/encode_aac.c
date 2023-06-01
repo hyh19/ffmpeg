@@ -1,4 +1,4 @@
-#include "test.h"
+#include "encode_aac.h"
 
 static int rec_status = 0;
 
