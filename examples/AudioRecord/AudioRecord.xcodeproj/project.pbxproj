@@ -60,7 +60,7 @@
 		9D3048F123EFB1030066D999 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9D3048F323EFB1030066D999 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9D3048F423EFB1030066D999 /* AudioRecord.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AudioRecord.entitlements; sourceTree = "<group>"; };
-		9D3048FA23EFB3610066D999 /* AudioResample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AudioResample-Bridging-Header.h"; sourceTree = "<group>"; };
+		9D3048FA23EFB3610066D999 /* AudioRecord-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AudioRecord-Bridging-Header.h"; sourceTree = "<group>"; };
 		9D3048FB23EFB3610066D999 /* audio_record.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = audio_record.h; sourceTree = "<group>"; };
 		9D3048FC23EFB3610066D999 /* audio_record.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = audio_record.c; sourceTree = "<group>"; };
 		9D30490023EFB6750066D999 /* libpostproc.55.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpostproc.55.dylib; sourceTree = "<group>"; };
@@ -249,7 +249,7 @@
 				9D3048F023EFB1030066D999 /* Main.storyboard */,
 				9D3048F323EFB1030066D999 /* Info.plist */,
 				9D3048F423EFB1030066D999 /* AudioRecord.entitlements */,
-				9D3048FA23EFB3610066D999 /* AudioResample-Bridging-Header.h */,
+				9D3048FA23EFB3610066D999 /* AudioRecord-Bridging-Header.h */,
 			);
 			path = AudioResample;
 			sourceTree = "<group>";
@@ -721,7 +721,7 @@
 				LIBRARY_SEARCH_PATHS = /Users/hyh/ffmpeg/n4.2.2/lib;
 				PRODUCT_BUNDLE_IDENTIFIER = avdance.AudioResample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "AudioResample/AudioResample-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "AudioResample/AudioRecord-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				USER_HEADER_SEARCH_PATHS = /Users/hyh/ffmpeg/n4.2.2/include;
@@ -745,7 +745,7 @@
 				LIBRARY_SEARCH_PATHS = /Users/hyh/ffmpeg/n4.2.2/lib;
 				PRODUCT_BUNDLE_IDENTIFIER = avdance.AudioResample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "AudioResample/AudioResample-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "AudioResample/AudioRecord-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				USER_HEADER_SEARCH_PATHS = /Users/hyh/ffmpeg/n4.2.2/include;
 			};
